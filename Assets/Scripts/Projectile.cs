@@ -5,33 +5,30 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour {
 
-    public float speed;
-    public GameObject impactEffectPlayer;
+    public float bulletSpeed;
+    // public GameObject impactEffectPlayer;
     public float bulletImpactTime;
     public float peImpactTime; 
 
-    private Transform player;
     private Vector3 target;
-    private bool canMove = true;
+    public Vector3 dir;
+    private Vector3 startPos;
 
-	// Use this for initialization
 	void Start ()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-
-        target = new Vector3(player.position.x, player.position.y, player.position.z);
+        target = GameObject.FindGameObjectWithTag("Player").transform.position;
+        startPos = transform.position;
     }
 	
-	// Update is called once per frame
 	void Update ()
     {
-        if(canMove)
-            transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, target)  <= 0)
+        // transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
+        transform.position += dir * (bulletSpeed * Time.deltaTime);
+        float dist = Vector3.Distance(transform.position, target);
+        if (dist  <= 0 || Vector3.Distance(transform.position,startPos) >= 10)
             DestroyProjectile();
 	}
-// //This below here is for resetting the scene on getting hit
+//This below here is for resetting the scene on getting hit
 //     void OnTriggerEnter(Collider other)
 //     {
 //         if (other.CompareTag("Player"))
@@ -45,11 +42,10 @@ public class Projectile : MonoBehaviour {
 //         }
 //     }
 
-    void DestroyProjectile()
+    private void DestroyProjectile()
     {
-
-        GameObject impactGO = Instantiate(impactEffectPlayer, transform.position, Quaternion.identity);
-        Destroy(impactGO, peImpactTime);
+        // GameObject impactGO = Instantiate(impactEffectPlayer, transform.position, Quaternion.identity);
+        // Destroy(impactGO, peImpactTime);
         Destroy(gameObject, bulletImpactTime);
     }
 }

@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour
     public float stoppingDistance;
     public float retreatDistance;
     public float startTimeBtwShots = 20;
+    public float bulletSpeed;
     public Transform player;
     public GameObject projectile;
     public Transform shootPoint;
@@ -28,11 +29,6 @@ public class Enemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     { 
-        Vector3 direction = player.position - transform.position;
-
-        Quaternion rotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotSpeed * Time.deltaTime);
-        transform.rotation = new Quaternion(0f, transform.rotation.y, 0f, transform.rotation.w);
 
         Vector3 relativePos = player.position - transform.position;
 
@@ -42,7 +38,9 @@ public class Enemy : MonoBehaviour
         {
             if (timeBtwShots <= 0)
             {
-                Instantiate(projectile, shootPoint.position, Quaternion.LookRotation(relativePos));
+                GameObject go = Instantiate(projectile, transform.position, Quaternion.LookRotation(relativePos));
+                go.GetComponent<Projectile>().dir = player.position - transform.position;
+                go.GetComponent<Projectile>().bulletSpeed = this.bulletSpeed;
                 timeBtwShots = startTimeBtwShots;
             }
             else
@@ -50,6 +48,5 @@ public class Enemy : MonoBehaviour
                 timeBtwShots -= Time.deltaTime;
             }
         }
-
     }
 }

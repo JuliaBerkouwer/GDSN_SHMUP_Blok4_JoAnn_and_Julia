@@ -2,70 +2,47 @@
 
 public class PlayerControler : MonoBehaviour
 {
-    // public float moveSpeed;
-    // public float jumpSpeed;
-    // public float gravity;
-    // public GameObject trailfx;
-
-    // public KeyCode shootKey = KeyCode.C;
-    // public KeyCode upKey = KeyCode.W;
-    // public KeyCode downKey = KeyCode.S;
-    // public KeyCode rightKey = KeyCode.D;
-    // public KeyCode leftKey = KeyCode.A;
-
-    // void Update()
-    // {
-    //     if (Input.GetKey(rightKey))
-    //     {
-    //         transform.position += Vector3.right * moveSpeed;
-    //     }
-
-    //     if (Input.GetKey(leftKey))
-    //     {
-    //         transform.position += Vector3.left * moveSpeed;
-    //     }
-
-    //     if (Input.GetKey(upKey))
-    //     {
-    //         transform.position += Vector3.up * moveSpeed;
-    //     }
-
-    //     if (Input.GetKey(downKey))
-    //     {
-    //         transform.position += Vector3.down * moveSpeed;
-    //     }
-    // }
 
     public float speed;
     public Transform player;
-    private Rigidbody2D rb;
-    private Vector2 moveVelocity;
+    private Rigidbody rb;
+    public float bulletSpeed;
+    private Vector3 moveVelocity;
     public float startTimeBtwShots = 20;
     private float timeBtwShots;
     public GameObject projectile;
     public Transform shootPoint;
 
     public KeyCode shootKey = KeyCode.C;
+    private bool canShoot = true;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
         timeBtwShots = startTimeBtwShots;
     }
 
     void Update()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"));
+        Vector3 moveInput = new Vector3(Input.GetAxis("Horizontal"),Input.GetAxis("Vertical"),transform.position.z);
         moveVelocity = moveInput.normalized * speed;
 
         Vector3 relativePos = player.position - transform.position;
 
         if (Input.GetKey(shootKey))
         {
+            if(canShoot)
+            {
+                GameObject go = Instantiate(projectile, transform.position, Quaternion.LookRotation(relativePos));
+                go.GetComponent<Projectile>().dir = Vector3.right;
+                go.GetComponent<Projectile>().bulletSpeed = this.bulletSpeed;
+                timeBtwShots = startTimeBtwShots;
+                canShoot = false;
+            }
+
             if (timeBtwShots <= 0)
             {
-                Instantiate(projectile, shootPoint.position, Quaternion.LookRotation(relativePos));
-                timeBtwShots = startTimeBtwShots;
+                canShoot = true;
             }
             else
             {
