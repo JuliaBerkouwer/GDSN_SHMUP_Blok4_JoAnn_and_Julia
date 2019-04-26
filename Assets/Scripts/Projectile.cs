@@ -1,46 +1,42 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-
-public class Projectile : MonoBehaviour {
-
+public class Projectile : MonoBehaviour
+{
     public float bulletSpeed;
-    // public GameObject impactEffectPlayer;
     public float bulletImpactTime;
-    public float peImpactTime; 
-
-    private Vector3 target;
+    [HideInInspector]
     public Vector3 dir;
+    [HideInInspector]
+    public GameObject whoFired;
+
     private Vector3 startPos;
 
-	void Start ()
+    void Start()
     {
-        target = GameObject.FindGameObjectWithTag("Player").transform.position;
         startPos = transform.position;
     }
-	
-	void Update ()
+
+    void Update()
     {
-        // transform.position = Vector3.MoveTowards(transform.position, target, speed * Time.deltaTime);
         transform.position += dir * (bulletSpeed * Time.deltaTime);
-        float dist = Vector3.Distance(transform.position, target);
-        if (dist  <= 0 || Vector3.Distance(transform.position,startPos) >= 10)
+
+        if (Vector3.Distance(transform.position, startPos) >= 10)
             DestroyProjectile();
-	}
-//This below here is for resetting the scene on getting hit
-//     void OnTriggerEnter(Collider other)
-//     {
-//         if (other.CompareTag("Player"))
-//         {
-//             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-//         }
-//         else if (!other.CompareTag("Police"))
-//         {
-//             DestroyProjectile();
-//             canMove = false;
-//         }
-//     }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.GetType() == typeof(EdgeCollider2D)) { return; }
+
+        if (collision.GetComponent<IDestroyable>() == null) { return; }
+
+        if (collision.gameObject != whoFired)
+        {
+            Destroy(collision.gameObject);
+            DestroyProjectile();
+        }
+
+    }
 
     private void DestroyProjectile()
     {
