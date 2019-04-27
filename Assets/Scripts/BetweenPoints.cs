@@ -1,58 +1,47 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class BetweenPoints : MonoBehaviour
 {
     public List<GameObject> points;
-    public List<Vector3> targets;
-    public Vector3 target;
-
-    public int currentPoint = 0;
     public float moveSpeed;
     public float rotSpeed;
     public bool rotate = true;
-    public bool kwal = false;
     public float speedMultiplier;
-    void Start()
+    public int currentPoint = 0;
+
+    private Vector3[] targets;
+    private Vector3 target;
+
+    private void Start()
     {
         target = transform.TransformPoint(points[currentPoint].transform.localPosition);
-
-        if(kwal)
+        targets = new Vector3[points.Count];
         moveSpeed = Random.Range(moveSpeed, moveSpeed * speedMultiplier);
 
-        foreach (GameObject t in points)
+        for (int i = 0; i < points.Count; i++)
         {
-            targets.Add(transform.TransformPoint(t.transform.localPosition));
+            targets[i] = transform.TransformPoint(points[i].transform.localPosition);
         }
     }
 
-    
     void Update()
     {
-        transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * moveSpeed);
-        
-        if (rotate)
-        {
-            Vector3 direction = target - transform.position;
-            Quaternion rotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, rotSpeed * Time.deltaTime);
-        }        
+        transform.position = Vector3.MoveTowards(transform.position, target, Time.deltaTime * moveSpeed);     
         
         if (Vector3.Distance(transform.position, target) <= 0.2f)
         {
-            if (!kwal) { 
-                if (currentPoint >= points.Count - 1)
-                    currentPoint = 0;
-                else
-                    currentPoint++;
+            if (currentPoint >= points.Count - 1)
+            {
+                currentPoint = 0;
             }
             else
             {
-                currentPoint = 1;
+                currentPoint++;
             }
-
-            target = targets[currentPoint];
         }
+
+        target = targets[currentPoint];
     }
 }
+

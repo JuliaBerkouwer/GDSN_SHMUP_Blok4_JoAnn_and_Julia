@@ -2,23 +2,20 @@
 
 public class Projectile : MonoBehaviour
 {
-    public float bulletSpeed;
     public float bulletImpactTime;
-    [HideInInspector]
-    public Vector3 dir;
-    [HideInInspector]
-    public GameObject whoFired;
-
+    private float bulletSpeed;
+    private Vector3 direction;
+    private GameObject whoFired;
     private Vector3 startPos;
 
-    void Start()
+    private void Start()
     {
         startPos = transform.position;
     }
 
-    void Update()
+    private void Update()
     {
-        transform.position += dir * (bulletSpeed * Time.deltaTime);
+        transform.position += direction * (bulletSpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, startPos) >= 10)
             DestroyProjectile();
@@ -30,12 +27,16 @@ public class Projectile : MonoBehaviour
 
         if (collision.GetComponent<IDestroyable>() == null) { return; }
 
-        if (collision.gameObject != whoFired)
-        {
-            Destroy(collision.gameObject);
-            DestroyProjectile();
-        }
+        if (collision.gameObject == whoFired) { return;}
 
+        Destroy(collision.gameObject);
+        DestroyProjectile();
+    }
+
+    public void setupBullet (Vector3 direction, float bulletSpeed, GameObject whoFired){
+        this.direction = direction.normalized;
+        this.bulletSpeed = bulletSpeed;
+        this.whoFired = whoFired;
     }
 
     private void DestroyProjectile()

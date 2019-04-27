@@ -12,6 +12,7 @@ public class PlayerControler : MonoBehaviour, IDestroyable
     public float startTimeBetweenShots = 20;
     public KeyCode shootKey = KeyCode.C;
 
+    private Vector3 movingDirection = Vector3.right;
     private Rigidbody2D rb;
     private Vector2 moveVelocity;
     private float timeBetweenShots;
@@ -20,16 +21,15 @@ public class PlayerControler : MonoBehaviour, IDestroyable
     private LineRenderer trailGraphics;
     private List<Vector2> trailGraphicsPoints = new List<Vector2>();
     private List<Vector2> trailColliderPoints = new List<Vector2>();
-    private Vector2 lastPos;
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        trailCollider = GetComponent<EdgeCollider2D>();
-        timeBetweenShots = startTimeBetweenShots;
-        lastPos = transform.position;
         trailGraphics = GetComponent<LineRenderer>();
+        trailCollider = GetComponent<EdgeCollider2D>();
+
+        timeBetweenShots = startTimeBetweenShots;
         trailGraphics.positionCount = lineLength;
 
         for (int i = 0; i < trailGraphics.positionCount; i++)
@@ -40,16 +40,31 @@ public class PlayerControler : MonoBehaviour, IDestroyable
 
     private void Update()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
-        moveVelocity = moveInput.normalized * movementSpeed;
-
+        Move();
         Shoot();
     }
 
     private void FixedUpdate()
     {
         rb.MovePosition(rb.position + moveVelocity * Time.fixedDeltaTime);
+        BetweenShotsTimer();
         Trail();
+    }
+
+    private void Move()
+    {
+        Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+
+        if(moveInput.x < 0)
+        {   
+            movingDirection = -Vector3.right;
+        }
+        else if(moveInput.x > 0)
+        {
+            movingDirection = Vector3.right;
+        }
+
+        moveVelocity = moveInput.normalized * movementSpeed;
     }
 
     private void Trail()
@@ -87,22 +102,25 @@ public class PlayerControler : MonoBehaviour, IDestroyable
             if (canShoot)
             {
                 GameObject go = Instantiate(projectile, transform.position, Quaternion.identity);
+
                 Projectile projectile1 = go.GetComponent<Projectile>();
-                projectile1.dir = Vector3.right;
-                projectile1.bulletSpeed = this.bulletSpeed;
-                projectile1.whoFired = gameObject;
+                projectile1.setupBullet(movingDirection, bulletSpeed, gameObject);
+
                 timeBetweenShots = startTimeBetweenShots;
                 canShoot = false;
             }
+        }
+    }
 
-            if (timeBetweenShots <= 0)
-            {
-                canShoot = true;
-            }
-            else
-            {
-                timeBetweenShots -= Time.deltaTime;
-            }
+    private void BetweenShotsTimer()
+    {
+        if (timeBetweenShots <= 0)
+        {
+            canShoot = true;
+        }
+        else
+        {
+            timeBetweenShots -= Time.fixedDeltaTime;
         }
     }
 }
