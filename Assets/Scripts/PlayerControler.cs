@@ -8,6 +8,7 @@ public class PlayerControler : MonoBehaviour, IDestroyable
     public int lineLength;
     [Space]
     public GameObject projectile;
+    public Transform shootPoint;
     public float bulletSpeed;
     public float startTimeBetweenShots = 20;
     public KeyCode shootKey = KeyCode.C;
@@ -65,7 +66,7 @@ public class PlayerControler : MonoBehaviour, IDestroyable
         {
             if (canShoot)
             {
-                GameObject go = Instantiate(projectile, transform.position, Quaternion.identity);
+                GameObject go = Instantiate(projectile, shootPoint.position, Quaternion.identity);
 
                 Projectile projectile1 = go.GetComponent<Projectile>();
                 projectile1.setupBullet(movingDirection, bulletSpeed, gameObject);
