@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerControler : MonoBehaviour
+public class PlayerControler : MonoBehaviour, IDestroyable
 {
     public float movementSpeed;
     [Space]
@@ -17,7 +17,6 @@ public class PlayerControler : MonoBehaviour
     private Vector2 moveVelocity;
     private float timeBetweenShots;
     private bool canShoot = true;
-
 
     void Start()
     {
@@ -38,24 +37,15 @@ public class PlayerControler : MonoBehaviour
         BetweenShotsTimer();
     }
 
-    private void OnCollisionEnter2D(Collider2D collision)
-    {
-
-        if (collision.gameObject.tag == "Bullet")
-        {   
-            Destroy(gameObject);
-        }
-    }
-
     private void Move()
     {
         Vector2 moveInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
-        if(moveInput.x < 0)
-        {   
+        if (moveInput.x < 0)
+        {
             movingDirection = -Vector3.right;
         }
-        else if(moveInput.x > 0)
+        else if (moveInput.x > 0)
         {
             movingDirection = Vector3.right;
         }

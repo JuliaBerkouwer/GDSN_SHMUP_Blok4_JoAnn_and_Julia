@@ -21,26 +21,18 @@ public class Projectile : MonoBehaviour, IDestroyable
             DestroyProjectile();
     }
 
-    private void OnCollisionEnter2D(Collider2D collision)
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.GetType() == typeof(EdgeCollider2D)) { return; }
-
-        if (collision.GetComponent<IDestroyable>() == null) { return; }
+        if (collision.gameObject.GetComponent<IDestroyable>() == null) { return; }
 
         if (collision.gameObject == whoFired) { return; }
-
-        if (collision.gameObject.tag == "Trail")
-        {   
-            Destroy(gameObject);
-        }
-
-        //if (collision.GetType() != typeof(Collision)) { return; }
 
         Destroy(collision.gameObject);
         DestroyProjectile();
     }
 
-    public void setupBullet (Vector3 direction, float bulletSpeed, GameObject whoFired){
+    public void setupBullet(Vector3 direction, float bulletSpeed, GameObject whoFired)
+    {
         this.direction = direction.normalized;
         this.bulletSpeed = bulletSpeed;
         this.whoFired = whoFired;
@@ -53,4 +45,3 @@ public class Projectile : MonoBehaviour, IDestroyable
         Destroy(gameObject, bulletImpactTime);
     }
 }
-
