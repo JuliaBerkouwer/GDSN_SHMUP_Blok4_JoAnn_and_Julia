@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-public class PlayerControler : MonoBehaviour, IDestroyable
+public class PlayerControler : MonoBehaviour
 {
     public float movementSpeed;
     [Space]
@@ -17,25 +17,13 @@ public class PlayerControler : MonoBehaviour, IDestroyable
     private Vector2 moveVelocity;
     private float timeBetweenShots;
     private bool canShoot = true;
-    private EdgeCollider2D trailCollider;
-    private LineRenderer trailGraphics;
-    private List<Vector2> trailGraphicsPoints = new List<Vector2>();
-    private List<Vector2> trailColliderPoints = new List<Vector2>();
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        trailGraphics = GetComponent<LineRenderer>();
-        trailCollider = GetComponent<EdgeCollider2D>();
 
         timeBetweenShots = startTimeBetweenShots;
-        trailGraphics.positionCount = lineLength;
-
-        for (int i = 0; i < trailGraphics.positionCount; i++)
-        {
-            trailGraphics.SetPosition(i, new Vector2(transform.position.x, transform.position.y));
-        }
     }
 
     private void Update()
@@ -48,7 +36,15 @@ public class PlayerControler : MonoBehaviour, IDestroyable
     {
         rb.MovePosition(rb.position + moveVelocity * Time.fixedDeltaTime);
         BetweenShotsTimer();
-        Trail();
+    }
+
+    private void OnCollisionEnter2D(Collider2D collision)
+    {
+
+        if (collision.gameObject.tag == "Bullet")
+        {   
+            Destroy(gameObject);
+        }
     }
 
     private void Move()
@@ -65,28 +61,6 @@ public class PlayerControler : MonoBehaviour, IDestroyable
         }
 
         moveVelocity = moveInput.normalized * movementSpeed;
-    }
-
-    private void Trail()
-    {
-        if (trailGraphicsPoints.Count == lineLength)
-        {
-            trailGraphicsPoints.RemoveAt(lineLength - 1);
-            trailColliderPoints.RemoveAt(lineLength - 1);
-        }
-
-        Vector2 position2d = new Vector2(transform.position.x, transform.position.y);
-
-        trailGraphicsPoints.Insert(0, position2d);
-        trailColliderPoints.Insert(0, transform.InverseTransformVector(position2d));
-
-        trailCollider.points = this.trailColliderPoints.ToArray();
-
-        for (int i = 0; i < trailGraphicsPoints.Count; i++)
-        {
-            Vector3 temp = new Vector3(this.trailGraphicsPoints[i].x, this.trailGraphicsPoints[i].y, transform.position.z);
-            trailGraphics.SetPosition(i, temp);
-        }
     }
 
     private void Shoot()

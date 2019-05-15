@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Projectile : MonoBehaviour
+public class Projectile : MonoBehaviour, IDestroyable
 {
     public float bulletImpactTime;
     private float bulletSpeed;
@@ -21,13 +21,20 @@ public class Projectile : MonoBehaviour
             DestroyProjectile();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnCollisionEnter2D(Collider2D collision)
     {
         if (collision.GetType() == typeof(EdgeCollider2D)) { return; }
 
         if (collision.GetComponent<IDestroyable>() == null) { return; }
 
         if (collision.gameObject == whoFired) { return; }
+
+        if (collision.gameObject.tag == "Trail")
+        {   
+            Destroy(gameObject);
+        }
+
+        //if (collision.GetType() != typeof(Collision)) { return; }
 
         Destroy(collision.gameObject);
         DestroyProjectile();

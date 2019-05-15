@@ -7,6 +7,8 @@ public class ParticleCollision : MonoBehaviour {
     public ParticleSystem particleLauncher;
     List<ParticleCollisionEvent> collisionEvents;
 
+    //public List<ParticleSystem.Particle> enter = new List<ParticleSystem.Particle>();
+    
     void Start () 
     {
         collisionEvents = new List<ParticleCollisionEvent> ();

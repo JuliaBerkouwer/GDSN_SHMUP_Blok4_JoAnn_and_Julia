@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 23b40ec205e45c747806602f58988340, type: 2}
+  - {fileID: 2100000, guid: 8c0b1e3ca1ba5864f89af88dbfedfbf4, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -162,12 +162,10 @@ MonoBehaviour:
   points:
   - {fileID: 3190034003577975480}
   - {fileID: 7701801775983501182}
-  - {fileID: 0}
-  - {fileID: 0}
-  moveSpeed: 3
+  moveSpeed: 5
   rotSpeed: 1
   rotate: 1
-  speedMultiplier: 0
+  speedMultiplier: 1.2
   currentPoint: 0
 --- !u!1 &3190034003577975480
 GameObject:
@@ -209,7 +207,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7437433411178392360}
   m_Layer: 9
-  m_Name: pos1 (1)
+  m_Name: pos2
   m_TagString: Untagged
   m_Icon: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -223,7 +221,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7701801775983501182}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.93, y: 3.23, z: -0.10623455}
+  m_LocalPosition: {x: -4.14, y: -4.76, z: -0.10623455}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 8528080508185954147}
