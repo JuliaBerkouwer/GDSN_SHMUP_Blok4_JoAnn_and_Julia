@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
 
         if (collision.GetComponent<IDestroyable>() == null) { return; }
 
-        if (collision.gameObject == whoFired) { return;}
+        if (collision.gameObject == whoFired) { return; }
 
         Destroy(collision.gameObject);
         DestroyProjectile();
